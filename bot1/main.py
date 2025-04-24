@@ -12,7 +12,7 @@ TOKEN = os.environ['TOKEN']
 # def load_token(filename='bot1/TOKEN.txt'):
 #    with open(filename, 'r') as file:
 #        return file.read().strip()
-#
+
 # TOKEN = load_token()
 
 # Функция для записи в лог
@@ -155,6 +155,36 @@ async def map(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(response)
     log_message(update, response)
 
+# Команда /goto — пропуск нескольких вопросов и переход к конкретному
+async def goto(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.chat_id
+    questions = load_quest_questions()
+
+    if not questions:
+        response = bot_texts["quest_empty"]
+        await update.message.reply_text(response)
+        log_message(update, response)
+        return
+
+    try:
+        # Преобразуем введённый номер в целое число
+        target_question = int(context.args[0]) - 1  # Математическое вычитание для правильного индекса
+        if target_question < 0 or target_question >= len(questions):
+            raise ValueError("Номер вопроса вне диапазона")
+
+        quest_data[user_id] = target_question  # Обновляем состояние квеста
+        current_question = questions[target_question]['question']
+        progress_bar = questions[target_question]['progress_bar']
+        response = bot_texts["goto_success"].format(progress=progress_bar, question=current_question)
+
+    except (IndexError, ValueError):
+        # Ошибка ввода (неверный номер вопроса)
+        response = "Ошибка! Введите номер вопроса, к которому хотите перейти (например, /goto 5)."
+    
+    save_active_quests(quest_data)
+    await update.message.reply_text(response)
+    log_message(update, response)
+
 # Обработка текстовых сообщений
 async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.chat_id
@@ -202,6 +232,7 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler('request', request))
     app.add_handler(CommandHandler('sos', sos))
     app.add_handler(CommandHandler('map', map))
+    app.add_handler(CommandHandler('goto', goto))
 
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text))
     app.add_handler(MessageHandler(~filters.TEXT & ~filters.COMMAND, handle_other))
