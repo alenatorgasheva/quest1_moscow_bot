@@ -148,7 +148,7 @@ async def map(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response = "Ты ещё не завершил квест, сначала его пройди!"
     else:
         # Отправляем карту только если квест пройден
-        with open('images/MAP.jpg', 'rb') as map_file:
+        with open('bot1/images/MAP.jpg', 'rb') as map_file:
             response = "Карта готова! Держи 🤗"
             await update.message.reply_photo(photo=InputFile(map_file, 'MAP.jpg'))
 
