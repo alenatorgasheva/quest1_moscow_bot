@@ -3,13 +3,17 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 from datetime import datetime
 import random
 import json
+import os
+
+# Чтение токена из переменной окружения
+TOKEN = os.environ['TOKEN']
 
 # Чтение токена из файла
-def load_token(filename='TOKEN.txt'):
-    with open(filename, 'r') as file:
-        return file.read().strip()
-
-TOKEN = load_token()
+# def load_token(filename='TOKEN.txt'):
+#    with open(filename, 'r') as file:
+#        return file.read().strip()
+#
+# TOKEN = load_token()
 
 # Функция для записи в лог
 def log_message(update: Update, bot_response: str):
