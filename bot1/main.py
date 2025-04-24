@@ -9,7 +9,7 @@ import os
 TOKEN = os.environ['TOKEN']
 
 # Чтение токена из файла
-# def load_token(filename='TOKEN.txt'):
+# def load_token(filename='bot1/TOKEN.txt'):
 #    with open(filename, 'r') as file:
 #        return file.read().strip()
 #
@@ -20,23 +20,23 @@ def log_message(update: Update, bot_response: str):
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     user_message = update.message.text or f"<{update.message.effective_attachment}>"
     log_entry = f"{current_time} | Chat ID: {update.message.chat_id} | Message: {user_message} | Bot Response: {bot_response}\n"
-    with open('DATA.txt', 'a', encoding='utf-8') as log_file:
+    with open('bot1/DATA.txt', 'a', encoding='utf-8') as log_file:
         log_file.write(log_entry)
 
 # Функция для чтения текстов из BOT_TEXTS.json
-def load_bot_texts(filename='BOT_TEXTS.json'):
+def load_bot_texts(filename='bot1/BOT_TEXTS.json'):
     with open(filename, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 bot_texts = load_bot_texts()
 
 # Функция для чтения вопросов и ответов
-def load_quest_questions(filename='QUEST.json'):
+def load_quest_questions(filename='bot1/QUEST.json'):
     with open(filename, 'r', encoding='utf-8') as file:
         return json.load(file)
 
 # Функции для работы с активными квестами
-def load_active_quests(filename='ACTIVE_QUESTS.txt'):
+def load_active_quests(filename='bot1/ACTIVE_QUESTS.txt'):
     active_quests = {}
     try:
         with open(filename, 'r', encoding='utf-8') as file:
@@ -49,7 +49,7 @@ def load_active_quests(filename='ACTIVE_QUESTS.txt'):
         pass
     return active_quests
 
-def save_active_quests(active_quests, filename='ACTIVE_QUESTS.txt'):
+def save_active_quests(active_quests, filename='bot1/ACTIVE_QUESTS.txt'):
     with open(filename, 'w', encoding='utf-8') as file:
         for chat_id, current_question in active_quests.items():
             file.write(f"{chat_id}|{current_question}\n")
